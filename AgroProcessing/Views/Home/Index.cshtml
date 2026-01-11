@@ -28,12 +28,12 @@
                 </svg>
                 View Dashboard
             </a>
-            <a href="/swagger" target="_blank"
+            <a asp-controller="Workflow" asp-action="Index"
                class="bg-primary-700 hover:bg-primary-800 text-white font-semibold py-3 px-6 rounded-lg transition-colors inline-flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                 </svg>
-                API Documentation
+                Workflow Management
             </a>
         </div>
     </div>
@@ -54,7 +54,7 @@
                     <span class="text-3xl">👨‍🌾</span>
                 </div>
             </div>
-            <a asp-controller="Farmers" asp-action="Index" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+            <a asp-controller="Admin" asp-action="Farmers" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
                 Manage Farmers →
             </a>
         </div>
@@ -69,7 +69,7 @@
                     <span class="text-3xl">👥</span>
                 </div>
             </div>
-            <a asp-controller="Buyers" asp-action="Index" class="text-green-600 hover:text-green-700 text-sm font-medium">
+            <a asp-controller="Admin" asp-action="Buyers" class="text-green-600 hover:text-green-700 text-sm font-medium">
                 Manage Buyers →
             </a>
         </div>
@@ -84,8 +84,8 @@
                     <span class="text-3xl">🌾</span>
                 </div>
             </div>
-            <a href="/swagger" class="text-yellow-600 hover:text-yellow-700 text-sm font-medium">
-                View Products →
+            <a asp-controller="Admin" asp-action="Products" class="text-yellow-600 hover:text-yellow-700 text-sm font-medium">
+                Manage Products →
             </a>
         </div>
 
@@ -99,8 +99,8 @@
                     <span class="text-3xl">👷</span>
                 </div>
             </div>
-            <a href="/swagger" class="text-purple-600 hover:text-purple-700 text-sm font-medium">
-                View Workers →
+            <a asp-controller="Admin" asp-action="Workers" class="text-purple-600 hover:text-purple-700 text-sm font-medium">
+                Manage Workers →
             </a>
         </div>
     </div>
@@ -130,7 +130,7 @@
                     <p class="text-4xl font-bold text-gray-900">@pendingPurchases</p>
                     <p class="text-sm text-gray-600 mt-1">Total: ₹@pendingAmount.ToString("N2")</p>
                 </div>
-                <a href="/swagger" class="text-orange-600 hover:text-orange-700 font-medium">
+                <a asp-controller="Workflow" asp-action="Purchases" class="text-orange-600 hover:text-orange-700 font-medium">
                     View All →
                 </a>
             </div>
@@ -156,7 +156,7 @@
                     <p class="text-4xl font-bold text-gray-900">@openSales</p>
                     <p class="text-sm text-gray-600 mt-1">Total: ₹@salesAmount.ToString("N2")</p>
                 </div>
-                <a href="/swagger" class="text-green-600 hover:text-green-700 font-medium">
+                <a asp-controller="Workflow" asp-action="Sales" class="text-green-600 hover:text-green-700 font-medium">
                     View All →
                 </a>
             </div>
@@ -238,13 +238,13 @@
             </div>
             <p class="text-gray-600 mb-4">Record raw material purchases from farmers with payment tracking</p>
             <div class="space-y-2">
-                <a href="/swagger/index.html#/Purchases" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
+                <a asp-controller="Workflow" asp-action="CreatePurchase" class="block text-primary-600 hover:text-primary-700 text-sm">
                     → Create Purchase Batch
                 </a>
-                <a href="/swagger/index.html#/Purchases" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
+                <a asp-controller="Workflow" asp-action="Purchases" class="block text-primary-600 hover:text-primary-700 text-sm">
                     → View Pending Batches
                 </a>
-                <a href="/swagger/index.html#/Purchase%20Payments" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
+                <a asp-controller="Workflow" asp-action="Purchases" class="block text-primary-600 hover:text-primary-700 text-sm">
                     → Manage Payments
                 </a>
             </div>
@@ -258,13 +258,13 @@
             </div>
             <p class="text-gray-600 mb-4">Track processing runs with multiple stages and worker assignments</p>
             <div class="space-y-2">
-                <a href="/swagger/index.html#/Processing" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
+                <a asp-controller="Workflow" asp-action="CreateProcessingRun" class="block text-primary-600 hover:text-primary-700 text-sm">
                     → Create Processing Run
                 </a>
-                <a href="/swagger/index.html#/Processing" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
+                <a asp-controller="Workflow" asp-action="Processing" class="block text-primary-600 hover:text-primary-700 text-sm">
                     → View Active Runs
                 </a>
-                <a href="/swagger/index.html#/Worker%20Payments" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
+                <a asp-controller="Workflow" asp-action="Processing" class="block text-primary-600 hover:text-primary-700 text-sm">
                     → Worker Payments
                 </a>
             </div>
@@ -278,13 +278,13 @@
             </div>
             <p class="text-gray-600 mb-4">Create sales orders with FIFO inventory allocation and payment tracking</p>
             <div class="space-y-2">
-                <a href="/swagger/index.html#/Sales" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
+                <a asp-controller="Workflow" asp-action="CreateSale" class="block text-primary-600 hover:text-primary-700 text-sm">
                     → Create Sale
                 </a>
-                <a href="/swagger/index.html#/Sales" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
+                <a asp-controller="Workflow" asp-action="Sales" class="block text-primary-600 hover:text-primary-700 text-sm">
                     → View Open Sales
                 </a>
-                <a href="/swagger/index.html#/Sales%20Payments" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
+                <a asp-controller="Workflow" asp-action="Sales" class="block text-primary-600 hover:text-primary-700 text-sm">
                     → Manage Payments
                 </a>
             </div>
@@ -298,13 +298,13 @@
             </div>
             <p class="text-gray-600 mb-4">Track raw and finished goods across multiple locations</p>
             <div class="space-y-2">
-                <a href="/swagger/index.html#/Inventory" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
-                    → Raw Inventory
+                <a asp-controller="Home" asp-action="Dashboard" class="block text-primary-600 hover:text-primary-700 text-sm">
+                    → View Inventory Overview
                 </a>
-                <a href="/swagger/index.html#/Inventory" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
-                    → Finished Inventory
+                <a asp-controller="Admin" asp-action="Products" class="block text-primary-600 hover:text-primary-700 text-sm">
+                    → Manage Products
                 </a>
-                <a href="/swagger/index.html#/Master%20Data%20-%20Locations" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
+                <a asp-controller="Admin" asp-action="Locations" class="block text-primary-600 hover:text-primary-700 text-sm">
                     → Manage Locations
                 </a>
             </div>
@@ -318,10 +318,10 @@
             </div>
             <p class="text-gray-600 mb-4">Record and track transportation costs between locations</p>
             <div class="space-y-2">
-                <a href="/swagger/index.html#/Transportation" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
-                    → Record Transportation
+                <a asp-controller="Workflow" asp-action="Index" class="block text-primary-600 hover:text-primary-700 text-sm">
+                    → View Transportation Records
                 </a>
-                <a href="/swagger/index.html#/Transportation" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
+                <a asp-controller="Workflow" asp-action="Index" class="block text-primary-600 hover:text-primary-700 text-sm">
                     → View Unpaid Costs
                 </a>
             </div>
@@ -335,14 +335,14 @@
             </div>
             <p class="text-gray-600 mb-4">Comprehensive business intelligence and analytics</p>
             <div class="space-y-2">
-                <a href="/swagger/index.html#/Reports" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
-                    → Batch Profit Analysis
+                <a asp-controller="Home" asp-action="Dashboard" class="block text-primary-600 hover:text-primary-700 text-sm">
+                    → View Dashboard
                 </a>
-                <a href="/swagger/index.html#/Reports" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
-                    → Yield Analysis
+                <a asp-controller="Workflow" asp-action="Purchases" class="block text-primary-600 hover:text-primary-700 text-sm">
+                    → Purchase Reports
                 </a>
-                <a href="/swagger/index.html#/Reports" target="_blank" class="block text-primary-600 hover:text-primary-700 text-sm">
-                    → Outstanding Payments
+                <a asp-controller="Workflow" asp-action="Sales" class="block text-primary-600 hover:text-primary-700 text-sm">
+                    → Sales Reports
                 </a>
             </div>
         </div>
@@ -449,7 +449,7 @@
             </div>
             <h3 class="font-semibold text-gray-900 mb-2">Set Up Master Data</h3>
             <p class="text-gray-600 mb-3">Add products, farmers, buyers, workers, and locations to the system</p>
-            <a asp-controller="Farmers" asp-action="Index" class="text-primary-600 hover:text-primary-700 font-medium text-sm">
+            <a asp-controller="Admin" asp-action="Farmers" class="text-primary-600 hover:text-primary-700 font-medium text-sm">
                 Start with Farmers →
             </a>
         </div>
@@ -459,7 +459,7 @@
             </div>
             <h3 class="font-semibold text-gray-900 mb-2">Record Purchases</h3>
             <p class="text-gray-600 mb-3">Create purchase batches from farmers and track payments</p>
-            <a href="/swagger/index.html#/Purchases" target="_blank" class="text-primary-600 hover:text-primary-700 font-medium text-sm">
+            <a asp-controller="Workflow" asp-action="CreatePurchase" class="text-primary-600 hover:text-primary-700 font-medium text-sm">
                 Create Purchase →
             </a>
         </div>
@@ -469,7 +469,7 @@
             </div>
             <h3 class="font-semibold text-gray-900 mb-2">Process & Sell</h3>
             <p class="text-gray-600 mb-3">Run processing operations and create sales to buyers</p>
-            <a href="/swagger/index.html#/Processing" target="_blank" class="text-primary-600 hover:text-primary-700 font-medium text-sm">
+            <a asp-controller="Workflow" asp-action="CreateProcessingRun" class="text-primary-600 hover:text-primary-700 font-medium text-sm">
                 Start Processing →
             </a>
         </div>
