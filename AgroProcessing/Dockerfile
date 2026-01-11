@@ -10,7 +10,7 @@ RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
 
 
 # Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 
 EXPOSE 8080
