@@ -28,3 +28,6 @@ README.md
 !.git/config
 !.git/packed-refs
 !.git/refs/heads/**
+
+# Don't ignore wwwroot/css (needed for Tailwind CSS)
+!**/wwwroot/css/**
