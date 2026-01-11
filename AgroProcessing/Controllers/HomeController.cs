@@ -1,0 +1,97 @@
+using System.Diagnostics;
+using AgroProcessing.Models;
+using AgroProcessing.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace AgroProcessing.Controllers
+{
+    public class HomeController : Controller
+    {
+        private readonly IPurchaseService _purchaseService;
+        private readonly IProcessingRunService _processingService;
+        private readonly ISalesService _salesService;
+        private readonly IRawInventoryService _rawInventoryService;
+        private readonly IFinishedInventoryService _finishedInventoryService;
+        private readonly IMasterDataService _masterDataService;
+
+        public HomeController(
+            IPurchaseService purchaseService,
+            IProcessingRunService processingService,
+            ISalesService salesService,
+            IRawInventoryService rawInventoryService,
+            IFinishedInventoryService finishedInventoryService,
+            IMasterDataService masterDataService)
+        {
+            _purchaseService = purchaseService;
+            _processingService = processingService;
+            _salesService = salesService;
+            _rawInventoryService = rawInventoryService;
+            _finishedInventoryService = finishedInventoryService;
+            _masterDataService = masterDataService;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Dashboard()
+        {
+            try
+            {
+                // Get all data for dashboard
+                var pendingPurchases = await _purchaseService.GetPendingPurchaseBatchesAsync();
+                var activeProcessingRuns = await _processingService.GetActiveProcessingRunsAsync();
+                var openSales = await _salesService.GetOpenSalesAsync();
+                var products = await _masterDataService.GetActiveProductsAsync();
+                var workers = await _masterDataService.GetActiveWorkersAsync();
+
+                // Create dashboard view model
+                var model = new DashboardViewModel
+                {
+                    TotalPurchases = pendingPurchases.Count(),
+                    ActiveProcessingRuns = activeProcessingRuns.Count(),
+                    TotalSalesAmount = openSales.Sum(s => s.TotalAmount),
+                    ActiveWorkers = workers.Count(),
+                    RecentPurchases = pendingPurchases.Take(5).ToList(),
+                    ActiveProcessing = activeProcessingRuns.Take(5).ToList(),
+                    RecentSales = openSales.Take(5).ToList(),
+                    Products = products.ToList()
+                };
+
+                // Get inventory data
+                foreach (var product in products)
+                {
+                    var rawInventory = await _rawInventoryService.GetInventoryByProductAsync(product.ProductId);
+                    var finishedInventory = await _finishedInventoryService.GetFinishedInventoryByProductAsync(product.ProductId);
+
+                    model.InventoryData.Add(new InventoryOverview
+                    {
+                        ProductId = product.ProductId,
+                        ProductName = product.Name,
+                        RawStock = rawInventory.Sum(i => i.Quantity),
+                        FinishedStock = finishedInventory.Sum(i => i.Quantity)
+                    });
+                }
+
+                return View(model);
+            }
+            catch (Exception)
+            {
+                // Return empty model on error
+                return View(new DashboardViewModel());
+            }
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
+}

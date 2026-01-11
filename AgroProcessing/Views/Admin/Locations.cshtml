@@ -1,0 +1,148 @@
+@model IEnumerable<AgroProcessing.Domain.Entries.Location>
+@{
+    ViewData["Title"] = "Locations";
+}
+
+<!-- Page Header -->
+<div class="mb-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Locations</h1>
+            <p class="mt-2 text-gray-600">Manage storage and processing locations</p>
+        </div>
+        <a asp-action="CreateLocation" class="inline-flex items-center px-4 py-2 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 transition-colors shadow-md">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Add Location
+        </a>
+    </div>
+</div>
+
+<!-- Success Message -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded-lg">
+        <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p class="text-green-800 font-medium">@TempData["SuccessMessage"]</p>
+        </div>
+    </div>
+}
+
+<!-- Locations Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    @if (Model.Any())
+    {
+        @foreach (var location in Model)
+        {
+            var (bgColor, textColor, iconBg) = location.LocationType switch
+            {
+                "Raw" => ("from-blue-500 to-blue-600", "text-blue-600", "bg-blue-100"),
+                "Processing" => ("from-purple-500 to-purple-600", "text-purple-600", "bg-purple-100"),
+                "Drying" => ("from-yellow-500 to-yellow-600", "text-yellow-600", "bg-yellow-100"),
+                "Finished" => ("from-green-500 to-green-600", "text-green-600", "bg-green-100"),
+                _ => ("from-gray-500 to-gray-600", "text-gray-600", "bg-gray-100")
+            };
+
+            <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow overflow-hidden">
+                <div class="bg-gradient-to-r @bgColor px-6 py-4">
+                    <div class="flex items-center justify-center text-white">
+                        <div class="bg-white bg-opacity-20 rounded-full p-3">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-lg font-bold text-gray-900 text-center mb-3">@location.Name</h3>
+                    <div class="flex justify-center mb-4">
+                        <span class="px-4 py-1 inline-flex text-xs leading-5 font-semibold rounded-full @iconBg @textColor">
+                            @location.LocationType
+                        </span>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-xs text-gray-500">ID: @location.LocationId.ToString().Substring(0, 8)</span>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-span-full">
+            <div class="bg-white rounded-lg shadow-md p-12 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No locations</h3>
+                <p class="mt-1 text-sm text-gray-500">Get started by creating a new location.</p>
+                <div class="mt-6">
+                    <a asp-action="CreateLocation" class="inline-flex items-center px-4 py-2 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Add Location
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Location Types Legend -->
+<div class="mt-8 bg-white rounded-lg shadow-md p-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Location Types</h3>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="flex items-center space-x-3">
+            <div class="bg-blue-100 rounded-lg p-2">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-900">Raw</p>
+                <p class="text-xs text-gray-500">Raw material storage</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <div class="bg-purple-100 rounded-lg p-2">
+                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-900">Processing</p>
+                <p class="text-xs text-gray-500">Processing area</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <div class="bg-yellow-100 rounded-lg p-2">
+                <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-900">Drying</p>
+                <p class="text-xs text-gray-500">Drying facility</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <div class="bg-green-100 rounded-lg p-2">
+                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-900">Finished</p>
+                <p class="text-xs text-gray-500">Finished goods storage</p>
+            </div>
+        </div>
+    </div>
+</div>

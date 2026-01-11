@@ -1,0 +1,219 @@
+@model AgroProcessing.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="mb-8">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-4xl font-bold text-gray-900">Dashboard</h1>
+            <p class="mt-2 text-gray-600 text-lg">Welcome to AgroProcessing Management System</p>
+            <p class="mt-1 text-sm text-gray-500">@DateTime.Now.ToString("dddd, MMMM dd, yyyy")</p>
+        </div>
+        <div class="hidden md:flex items-center space-x-3">
+            <a asp-controller="Workflow" asp-action="Index" class="px-4 py-2 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors shadow-md">View Workflows</a>
+            <a asp-controller="Admin" asp-action="Index" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">Admin Panel</a>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow border border-green-200">
+        <div class="flex items-center justify-between mb-4">
+            <div class="bg-green-500 rounded-xl p-3 shadow-lg">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+            </div>
+        </div>
+        <p class="text-sm font-medium text-green-700 mb-1">Total Purchases</p>
+        <p class="text-4xl font-bold text-green-900">@Model.TotalPurchases</p>
+        <a asp-controller="Workflow" asp-action="Purchases" class="text-sm text-green-600 hover:text-green-800 font-medium">View all ?</a>
+    </div>
+
+    <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow border border-purple-200">
+        <div class="flex items-center justify-between mb-4">
+            <div class="bg-purple-500 rounded-xl p-3 shadow-lg">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+            </div>
+        </div>
+        <p class="text-sm font-medium text-purple-700 mb-1">Active Processing</p>
+        <p class="text-4xl font-bold text-purple-900">@Model.ActiveProcessingRuns</p>
+        <a asp-controller="Workflow" asp-action="Processing" class="text-sm text-purple-600 hover:text-purple-800 font-medium">View all ?</a>
+    </div>
+
+    <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow border border-orange-200">
+        <div class="flex items-center justify-between mb-4">
+            <div class="bg-orange-500 rounded-xl p-3 shadow-lg">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+        </div>
+        <p class="text-sm font-medium text-orange-700 mb-1">Total Sales</p>
+        <p class="text-4xl font-bold text-orange-900">?@Model.TotalSalesAmount.ToString("N0")</p>
+        <a asp-controller="Workflow" asp-action="Sales" class="text-sm text-orange-600 hover:text-orange-800 font-medium">View all ?</a>
+    </div>
+
+    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow border border-blue-200">
+        <div class="flex items-center justify-between mb-4">
+            <div class="bg-blue-500 rounded-xl p-3 shadow-lg">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            </div>
+        </div>
+        <p class="text-sm font-medium text-blue-700 mb-1">Active Workers</p>
+        <p class="text-4xl font-bold text-blue-900">@Model.ActiveWorkers</p>
+        <a asp-controller="Admin" asp-action="Workers" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Manage ?</a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">Recent Purchases</h2>
+            <a asp-controller="Workflow" asp-action="Purchases" class="text-green-600 hover:text-green-700 text-sm font-medium">View All ?</a>
+        </div>
+        @if (Model.RecentPurchases.Any())
+        {
+            <div class="space-y-3">
+                @foreach (var purchase in Model.RecentPurchases)
+                {
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors border border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-green-100 rounded-lg p-2">
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900">@purchase.RawWeight.ToString("N2") kg</p>
+                                <p class="text-sm text-gray-600">@purchase.PurchaseDate.ToString("MMM dd, yyyy")</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-gray-900">?@purchase.TotalAmount.ToString("N2")</p>
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">@purchase.Status</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-8 text-gray-500">
+                <p>No recent purchases</p>
+                <a asp-controller="Workflow" asp-action="CreatePurchase" class="mt-4 inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">New Purchase</a>
+            </div>
+        }
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+        <div class="space-y-3">
+            <a asp-controller="Workflow" asp-action="CreatePurchase" class="flex items-center p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors border border-green-200">
+                <div class="bg-green-500 rounded-lg p-2 mr-3">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <div>
+                    <p class="font-semibold text-green-900">New Purchase</p>
+                    <p class="text-xs text-green-600">Buy raw materials</p>
+                </div>
+            </a>
+
+            <a asp-controller="Workflow" asp-action="CreateProcessingRun" class="flex items-center p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors border border-purple-200">
+                <div class="bg-purple-500 rounded-lg p-2 mr-3">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.50 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+                </div>
+                <div>
+                    <p class="font-semibold text-purple-900">Start Processing</p>
+                    <p class="text-xs text-purple-600">Create processing run</p>
+                </div>
+            </a>
+
+            <a asp-controller="Workflow" asp-action="CreateSale" class="flex items-center p-3 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors border border-orange-200">
+                <div class="bg-orange-500 rounded-lg p-2 mr-3">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+                <div>
+                    <p class="font-semibold text-orange-900">Create Sale</p>
+                    <p class="text-xs text-orange-600">Sell products</p>
+                </div>
+            </a>
+
+            <a asp-controller="Admin" asp-action="Index" class="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200">
+                <div class="bg-blue-500 rounded-lg p-2 mr-3">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+                </div>
+                <div>
+                    <p class="font-semibold text-blue-900">Admin Panel</p>
+                    <p class="text-xs text-blue-600">Manage data</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl shadow-md p-6 mb-8 border border-gray-200">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Inventory Overview</h2>
+        <a asp-controller="Admin" asp-action="Products" class="text-primary-600 hover:text-primary-700 text-sm font-medium">Manage Products ?</a>
+    </div>
+    @if (Model.InventoryData.Any())
+    {
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Product</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Raw Stock</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Finished Stock</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach (var item in Model.InventoryData)
+                    {
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4">
+                                <span class="text-sm font-semibold text-gray-900">@item.ProductName</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="text-sm font-bold text-gray-900">@item.RawStock.ToString("N2") kg</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="text-sm font-bold text-gray-900">@item.FinishedStock.ToString("N2") kg</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full @(item.Status == "Low Stock" ? "bg-yellow-100 text-yellow-800" : "bg-green-100 text-green-800")">
+                                    @item.Status
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-12 text-gray-500">
+            <p class="mb-4">No inventory data available</p>
+            <a asp-controller="Admin" asp-action="Products" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">Add Products</a>
+        </div>
+    }
+</div>
+
+@if (Model.ActiveProcessing.Any())
+{
+    <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">Active Processing Runs</h2>
+            <a asp-controller="Workflow" asp-action="Processing" class="text-purple-600 hover:text-purple-700 text-sm font-medium">View All ?</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            @foreach (var run in Model.ActiveProcessing)
+            {
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
+                    <span class="px-3 py-1 bg-purple-500 text-white text-xs font-semibold rounded-full">@run.Status</span>
+                    <p class="text-xs text-purple-700 mt-3">Run ID: @run.ProcessingRunId.ToString().Substring(0, 13)</p>
+                    <p class="text-sm text-purple-800 mt-1">Started: @run.StartDate.ToString("MMM dd, yyyy")</p>
+                    <a asp-controller="Workflow" asp-action="ProcessingDetails" asp-route-id="@run.ProcessingRunId" class="mt-3 inline-block text-sm text-purple-700 hover:text-purple-900 font-medium">View Details ?</a>
+                </div>
+            }
+        </div>
+    </div>
+}
