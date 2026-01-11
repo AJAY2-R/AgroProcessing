@@ -54,6 +54,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<PurchasePayment>> GetPaymentsByBatchAsync(Guid purchaseBatchId)
         {
             return await _context.PurchasePayments
+                .AsNoTracking()
                 .Where(pp => pp.PurchaseBatchId == purchaseBatchId)
                 .OrderBy(pp => pp.DueDate)
                 .ToListAsync();
@@ -62,6 +63,7 @@ namespace AgroProcessing.Services
         public async Task<decimal> GetTotalPaidAsync(Guid purchaseBatchId)
         {
             return await _context.PurchasePayments
+                .AsNoTracking()
                 .Where(pp => pp.PurchaseBatchId == purchaseBatchId)
                 .SumAsync(pp => pp.AmountPaid);
         }
@@ -70,6 +72,7 @@ namespace AgroProcessing.Services
         {
             var today = DateTime.UtcNow.Date;
             return await _context.PurchasePayments
+                .AsNoTracking()
                 .Where(pp => pp.PaymentStatus == "Pending" && pp.DueDate < today)
                 .OrderBy(pp => pp.DueDate)
                 .ToListAsync();

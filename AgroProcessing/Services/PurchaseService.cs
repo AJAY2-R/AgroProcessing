@@ -80,6 +80,7 @@ namespace AgroProcessing.Services
         public async Task<PurchaseBatch?> GetPurchaseBatchByIdAsync(Guid purchaseBatchId)
         {
             return await _context.PurchaseBatches
+                .AsNoTracking()
                 .Include(pb => pb.Payments)
                 .FirstOrDefaultAsync(pb => pb.PurchaseBatchId == purchaseBatchId);
         }
@@ -87,6 +88,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<PurchaseBatch>> GetPurchaseBatchesByFarmerAsync(Guid farmerId)
         {
             return await _context.PurchaseBatches
+                .AsNoTracking()
                 .Where(pb => pb.FarmerId == farmerId)
                 .Include(pb => pb.Payments)
                 .OrderByDescending(pb => pb.PurchaseDate)
@@ -96,6 +98,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<PurchaseBatch>> GetPendingPurchaseBatchesAsync()
         {
             return await _context.PurchaseBatches
+                .AsNoTracking()
                 .Where(pb => pb.Status == "Stored")
                 .Include(pb => pb.Payments)
                 .OrderBy(pb => pb.PurchaseDate)
@@ -105,6 +108,7 @@ namespace AgroProcessing.Services
         public async Task<decimal> GetOutstandingAmountAsync(Guid purchaseBatchId)
         {
             var batch = await _context.PurchaseBatches
+                .AsNoTracking()
                 .Include(pb => pb.Payments)
                 .FirstOrDefaultAsync(pb => pb.PurchaseBatchId == purchaseBatchId);
 

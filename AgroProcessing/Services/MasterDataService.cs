@@ -17,6 +17,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<Product>> GetActiveProductsAsync()
         {
             return await _context.Products
+                .AsNoTracking()
                 .Where(p => p.IsActive)
                 .OrderBy(p => p.Name)
                 .ToListAsync();
@@ -25,6 +26,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<Worker>> GetActiveWorkersAsync()
         {
             return await _context.Workers
+                .AsNoTracking()
                 .Where(w => w.IsActive)
                 .OrderBy(w => w.Name)
                 .ToListAsync();
@@ -33,6 +35,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<WorkType>> GetActiveWorkTypesAsync()
         {
             return await _context.WorkTypes
+                .AsNoTracking()
                 .Where(wt => wt.IsActive)
                 .OrderBy(wt => wt.Name)
                 .ToListAsync();
@@ -41,6 +44,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<Location>> GetAllLocationsAsync()
         {
             return await _context.Locations
+                .AsNoTracking()
                 .OrderBy(l => l.LocationType)
                 .ThenBy(l => l.Name)
                 .ToListAsync();
@@ -49,6 +53,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<Farmer>> GetAllFarmersAsync()
         {
             return await _context.Farmers
+                .AsNoTracking()
                 .OrderBy(f => f.Name)
                 .ToListAsync();
         }
@@ -56,28 +61,37 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<Buyer>> GetAllBuyersAsync()
         {
             return await _context.Buyers
+                .AsNoTracking()
                 .OrderBy(b => b.Name)
                 .ToListAsync();
         }
 
         public async Task<Product?> GetProductByIdAsync(Guid productId)
         {
-            return await _context.Products.FindAsync(productId);
+            return await _context.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
         }
 
         public async Task<Worker?> GetWorkerByIdAsync(Guid workerId)
         {
-            return await _context.Workers.FindAsync(workerId);
+            return await _context.Workers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(w => w.WorkerId == workerId);
         }
 
         public async Task<Farmer?> GetFarmerByIdAsync(Guid farmerId)
         {
-            return await _context.Farmers.FindAsync(farmerId);
+            return await _context.Farmers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(f => f.FarmerId == farmerId);
         }
 
         public async Task<Buyer?> GetBuyerByIdAsync(Guid buyerId)
         {
-            return await _context.Buyers.FindAsync(buyerId);
+            return await _context.Buyers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(b => b.BuyerId == buyerId);
         }
 
         public async Task<Product> CreateProductAsync(Product product)

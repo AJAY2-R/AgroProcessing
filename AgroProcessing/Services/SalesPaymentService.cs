@@ -49,6 +49,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<SalesPayment>> GetPaymentsBySaleAsync(Guid saleId)
         {
             return await _context.SalesPayments
+                .AsNoTracking()
                 .Where(sp => sp.SaleId == saleId)
                 .OrderBy(sp => sp.DueDate)
                 .ToListAsync();
@@ -57,6 +58,7 @@ namespace AgroProcessing.Services
         public async Task<decimal> GetTotalPaidForSaleAsync(Guid saleId)
         {
             return await _context.SalesPayments
+                .AsNoTracking()
                 .Where(sp => sp.SaleId == saleId)
                 .SumAsync(sp => sp.AmountPaid);
         }
@@ -65,6 +67,7 @@ namespace AgroProcessing.Services
         {
             var today = DateTime.UtcNow.Date;
             return await _context.SalesPayments
+                .AsNoTracking()
                 .Where(sp => sp.PaymentStatus == "Pending" && sp.DueDate < today)
                 .OrderBy(sp => sp.DueDate)
                 .ToListAsync();

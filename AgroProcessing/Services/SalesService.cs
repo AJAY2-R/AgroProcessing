@@ -100,12 +100,14 @@ namespace AgroProcessing.Services
         public async Task<Sale?> GetSaleByIdAsync(Guid saleId)
         {
             return await _context.Sales
+                .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.SaleId == saleId);
         }
 
         public async Task<IEnumerable<Sale>> GetSalesByBuyerAsync(Guid buyerId)
         {
             return await _context.Sales
+                .AsNoTracking()
                 .Where(s => s.BuyerId == buyerId)
                 .OrderByDescending(s => s.SaleDate)
                 .ToListAsync();
@@ -114,6 +116,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<Sale>> GetOpenSalesAsync()
         {
             return await _context.Sales
+                .AsNoTracking()
                 .Where(s => s.Status == "Open")
                 .OrderBy(s => s.SaleDate)
                 .ToListAsync();
@@ -144,6 +147,7 @@ namespace AgroProcessing.Services
         public async Task<decimal> GetBuyerOutstandingAsync(Guid buyerId)
         {
             var sales = await _context.Sales
+                .AsNoTracking()
                 .Where(s => s.BuyerId == buyerId && s.Status == "Open")
                 .Select(s => new { s.SaleId, s.TotalAmount })
                 .ToListAsync();
@@ -153,6 +157,7 @@ namespace AgroProcessing.Services
             foreach (var sale in sales)
             {
                 var payments = await _context.SalesPayments
+                    .AsNoTracking()
                     .Where(sp => sp.SaleId == sale.SaleId)
                     .SumAsync(sp => sp.AmountPaid);
 

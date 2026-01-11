@@ -50,6 +50,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<Transportation>> GetTransportationByTypeAsync(string relatedType, Guid relatedId)
         {
             return await _context.Transportations
+                .AsNoTracking()
                 .Where(t => t.RelatedType == relatedType && t.RelatedId == relatedId)
                 .ToListAsync();
         }
@@ -57,6 +58,7 @@ namespace AgroProcessing.Services
         public async Task<decimal> GetTotalTransportationCostAsync(string relatedType, Guid relatedId)
         {
             return await _context.Transportations
+                .AsNoTracking()
                 .Where(t => t.RelatedType == relatedType && t.RelatedId == relatedId)
                 .SumAsync(t => t.Cost);
         }
@@ -76,6 +78,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<Transportation>> GetUnpaidTransportationsAsync()
         {
             return await _context.Transportations
+                .AsNoTracking()
                 .Where(t => t.PaymentStatus == "Unpaid")
                 .OrderByDescending(t => t.Cost)
                 .ToListAsync();

@@ -83,6 +83,7 @@ namespace AgroProcessing.Services
         public async Task<decimal> GetAvailableFinishedQuantityAsync(Guid purchaseBatchId)
         {
             return await _context.FinishedInventories
+                .AsNoTracking()
                 .Where(fi => fi.PurchaseBatchId == purchaseBatchId)
                 .SumAsync(fi => fi.Quantity);
         }
@@ -90,6 +91,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<FinishedInventory>> GetFinishedInventoryByLocationAsync(Guid locationId)
         {
             return await _context.FinishedInventories
+                .AsNoTracking()
                 .Where(fi => fi.LocationId == locationId && fi.Quantity > 0)
                 .OrderByDescending(fi => fi.Quantity)
                 .ToListAsync();
@@ -98,6 +100,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<FinishedInventory>> GetFinishedInventoryByProductAsync(Guid productId)
         {
             return await _context.FinishedInventories
+                .AsNoTracking()
                 .Where(fi => fi.ProductId == productId && fi.Quantity > 0)
                 .OrderByDescending(fi => fi.Quantity)
                 .ToListAsync();
@@ -106,6 +109,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<FinishedInventory>> GetAvailableStockForSaleAsync(Guid productId)
         {
             return await _context.FinishedInventories
+                .AsNoTracking()
                 .Where(fi => fi.ProductId == productId && fi.Quantity > 0)
                 .OrderBy(fi => fi.PurchaseBatchId)
                 .ToListAsync();
@@ -114,6 +118,7 @@ namespace AgroProcessing.Services
         public async Task<bool> HasSufficientFinishedStockAsync(Guid productId, decimal requiredQuantity)
         {
             var totalAvailable = await _context.FinishedInventories
+                .AsNoTracking()
                 .Where(fi => fi.ProductId == productId)
                 .SumAsync(fi => fi.Quantity);
 

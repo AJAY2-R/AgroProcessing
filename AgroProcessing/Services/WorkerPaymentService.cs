@@ -51,6 +51,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<WorkerPayment>> GetUnpaidWorkerPaymentsAsync()
         {
             return await _context.WorkerPayments
+                .AsNoTracking()
                 .Where(wp => !wp.PaidStatus)
                 .OrderByDescending(wp => wp.Amount)
                 .ToListAsync();
@@ -59,6 +60,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<WorkerPayment>> GetWorkerPaymentsByWorkerAsync(Guid workerId)
         {
             return await _context.WorkerPayments
+                .AsNoTracking()
                 .Where(wp => wp.WorkerId == workerId)
                 .OrderByDescending(wp => wp.PaymentDate)
                 .ToListAsync();
@@ -80,6 +82,7 @@ namespace AgroProcessing.Services
         public async Task<decimal> GetTotalUnpaidForWorkerAsync(Guid workerId)
         {
             return await _context.WorkerPayments
+                .AsNoTracking()
                 .Where(wp => wp.WorkerId == workerId && !wp.PaidStatus)
                 .SumAsync(wp => wp.Amount);
         }
@@ -87,6 +90,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<WorkerPayment>> GetPaymentsByProcessingStageAsync(Guid processingStageId)
         {
             return await _context.WorkerPayments
+                .AsNoTracking()
                 .Where(wp => wp.ProcessingStageId == processingStageId)
                 .ToListAsync();
         }

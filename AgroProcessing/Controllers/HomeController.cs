@@ -73,7 +73,7 @@ namespace AgroProcessing.Controllers
         {
             try
             {
-                // Get all data for dashboard
+                // Get all data for dashboard - using AsNoTracking for read-only queries
                 var pendingPurchases = await _purchaseService.GetPendingPurchaseBatchesAsync();
                 var activeProcessingRuns = await _processingService.GetActiveProcessingRunsAsync();
                 var openSales = await _salesService.GetOpenSalesAsync();

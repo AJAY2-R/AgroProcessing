@@ -83,6 +83,7 @@ namespace AgroProcessing.Services
         public async Task<decimal> GetAvailableQuantityAsync(Guid purchaseBatchId)
         {
             return await _context.RawInventories
+                .AsNoTracking()
                 .Where(ri => ri.PurchaseBatchId == purchaseBatchId)
                 .SumAsync(ri => ri.Quantity);
         }
@@ -90,6 +91,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<RawInventory>> GetInventoryByLocationAsync(Guid locationId)
         {
             return await _context.RawInventories
+                .AsNoTracking()
                 .Where(ri => ri.LocationId == locationId && ri.Quantity > 0)
                 .OrderByDescending(ri => ri.Quantity)
                 .ToListAsync();
@@ -98,6 +100,7 @@ namespace AgroProcessing.Services
         public async Task<IEnumerable<RawInventory>> GetInventoryByProductAsync(Guid productId)
         {
             return await _context.RawInventories
+                .AsNoTracking()
                 .Where(ri => ri.ProductId == productId && ri.Quantity > 0)
                 .OrderByDescending(ri => ri.Quantity)
                 .ToListAsync();

@@ -242,12 +242,14 @@ namespace AgroProcessing.Services
         public async Task<ProcessingRun?> GetProcessingRunByIdAsync(Guid processingRunId)
         {
             return await _context.ProcessingRuns
+                .AsNoTracking()
                 .FirstOrDefaultAsync(pr => pr.ProcessingRunId == processingRunId);
         }
 
         public async Task<IEnumerable<ProcessingRun>> GetActiveProcessingRunsAsync()
         {
             return await _context.ProcessingRuns
+                .AsNoTracking()
                 .Where(pr => pr.Status == "Started")
                 .OrderBy(pr => pr.StartDate)
                 .ToListAsync();
@@ -256,15 +258,18 @@ namespace AgroProcessing.Services
         public async Task<decimal> CalculateTotalProcessingCostAsync(Guid processingRunId)
         {
             var stages = await _context.ProcessingStages
+                .AsNoTracking()
                 .Where(ps => ps.ProcessingRunId == processingRunId)
                 .Select(ps => ps.ProcessingStageId)
                 .ToListAsync();
 
             var workerCosts = await _context.ProcessingStageWorkers
+                .AsNoTracking()
                 .Where(psw => stages.Contains(psw.ProcessingStageId))
                 .SumAsync(psw => psw.CalculatedCost);
 
             var additionalCosts = await _context.ProcessingCosts
+                .AsNoTracking()
                 .Where(pc => pc.ProcessingRunId == processingRunId)
                 .SumAsync(pc => pc.Amount);
 

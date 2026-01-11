@@ -15,13 +15,17 @@ namespace AgroProcessing.Services
 
         public async Task<object> GetBatchProfitReportAsync(Guid purchaseBatchId)
         {
-            var batch = await _context.PurchaseBatches.FindAsync(purchaseBatchId);
+            var batch = await _context.PurchaseBatches
+                .AsNoTracking()
+                .FirstOrDefaultAsync(pb => pb.PurchaseBatchId == purchaseBatchId);
+            
             if (batch == null)
                 throw new InvalidOperationException("Purchase batch not found");
 
             var purchaseCost = batch.TotalAmount;
 
             var allocations = await _context.BatchOutputAllocations
+                .AsNoTracking()
                 .Where(boa => boa.PurchaseBatchId == purchaseBatchId)
                 .ToListAsync();
 
@@ -29,15 +33,18 @@ namespace AgroProcessing.Services
             var totalOutputWeight = allocations.Sum(a => a.OutputWeight);
 
             var transportCost = await _context.Transportations
+                .AsNoTracking()
                 .Where(t => t.RelatedType == "Purchase" && t.RelatedId == purchaseBatchId)
                 .SumAsync(t => t.Cost);
 
             var salesAllocations = await _context.SaleBatchAllocations
+                .AsNoTracking()
                 .Where(sba => sba.PurchaseBatchId == purchaseBatchId)
                 .ToListAsync();
 
             var saleItemIds = salesAllocations.Select(sa => sa.SaleItemId).ToList();
             var saleItems = await _context.SaleItems
+                .AsNoTracking()
                 .Where(si => saleItemIds.Contains(si.SaleItemId))
                 .ToListAsync();
 
@@ -71,16 +78,21 @@ namespace AgroProcessing.Services
 
         public async Task<object> GetYieldAnalysisReportAsync(Guid productId)
         {
-            var product = await _context.Products.FindAsync(productId);
+            var product = await _context.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
+                
             if (product == null)
                 throw new InvalidOperationException("Product not found");
 
             var processingRuns = await _context.ProcessingRuns
+                .AsNoTracking()
                 .Where(pr => pr.ProductId == productId && pr.Status == "Completed")
                 .Select(pr => pr.ProcessingRunId)
                 .ToListAsync();
 
             var outputs = await _context.ProcessingOutputs
+                .AsNoTracking()
                 .Where(po => processingRuns.Contains(po.ProcessingRunId))
                 .ToListAsync();
 
@@ -121,6 +133,7 @@ namespace AgroProcessing.Services
         public async Task<object> GetOutstandingPaymentsReportAsync()
         {
             var purchasePayments = await _context.PurchasePayments
+                .AsNoTracking()
                 .Where(pp => pp.PaymentStatus == "Pending")
                 .GroupBy(pp => pp.PurchaseBatchId)
                 .Select(g => new
@@ -131,6 +144,7 @@ namespace AgroProcessing.Services
                 .ToListAsync();
 
             var salesPayments = await _context.SalesPayments
+                .AsNoTracking()
                 .Where(sp => sp.PaymentStatus == "Pending")
                 .GroupBy(sp => sp.SaleId)
                 .Select(g => new
@@ -141,6 +155,7 @@ namespace AgroProcessing.Services
                 .ToListAsync();
 
             var workerPayments = await _context.WorkerPayments
+                .AsNoTracking()
                 .Where(wp => !wp.PaidStatus)
                 .GroupBy(wp => wp.WorkerId)
                 .Select(g => new
@@ -164,6 +179,7 @@ namespace AgroProcessing.Services
         public async Task<object> GetInventoryValuationReportAsync()
         {
             var rawInventory = await _context.RawInventories
+                .AsNoTracking()
                 .Where(ri => ri.Quantity > 0)
                 .GroupBy(ri => ri.ProductId)
                 .Select(g => new
@@ -174,6 +190,7 @@ namespace AgroProcessing.Services
                 .ToListAsync();
 
             var finishedInventory = await _context.FinishedInventories
+                .AsNoTracking()
                 .Where(fi => fi.Quantity > 0)
                 .GroupBy(fi => fi.ProductId)
                 .Select(g => new
@@ -194,7 +211,7 @@ namespace AgroProcessing.Services
 
         public async Task<object> GetWorkerPaymentSummaryAsync(Guid? workerId = null)
         {
-            var query = _context.WorkerPayments.AsQueryable();
+            var query = _context.WorkerPayments.AsNoTracking().AsQueryable();
 
             if (workerId.HasValue)
             {
@@ -218,17 +235,22 @@ namespace AgroProcessing.Services
 
         public async Task<object> GetProcessingCostAnalysisAsync(Guid processingRunId)
         {
-            var run = await _context.ProcessingRuns.FindAsync(processingRunId);
+            var run = await _context.ProcessingRuns
+                .AsNoTracking()
+                .FirstOrDefaultAsync(pr => pr.ProcessingRunId == processingRunId);
+                
             if (run == null)
                 throw new InvalidOperationException("Processing run not found");
 
             var stages = await _context.ProcessingStages
+                .AsNoTracking()
                 .Where(ps => ps.ProcessingRunId == processingRunId)
                 .ToListAsync();
 
             var stageIds = stages.Select(s => s.ProcessingStageId).ToList();
 
             var workerCosts = await _context.ProcessingStageWorkers
+                .AsNoTracking()
                 .Where(psw => stageIds.Contains(psw.ProcessingStageId))
                 .GroupBy(psw => psw.ProcessingStageId)
                 .Select(g => new
@@ -240,6 +262,7 @@ namespace AgroProcessing.Services
                 .ToListAsync();
 
             var additionalCosts = await _context.ProcessingCosts
+                .AsNoTracking()
                 .Where(pc => pc.ProcessingRunId == processingRunId)
                 .ToListAsync();
 
