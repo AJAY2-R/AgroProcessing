@@ -15,10 +15,10 @@ namespace AgroProcessing.Migrations
                 name: "Buyers",
                 columns: table => new
                 {
-                    BuyerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    CreditLimit = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
+                    BuyerId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
+                    CreditLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,9 +29,9 @@ namespace AgroProcessing.Migrations
                 name: "Farmers",
                 columns: table => new
                 {
-                    FarmerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true)
+                    FarmerId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -42,9 +42,9 @@ namespace AgroProcessing.Migrations
                 name: "Locations",
                 columns: table => new
                 {
-                    LocationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    LocationType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    LocationId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    LocationType = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,12 +55,12 @@ namespace AgroProcessing.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    ExpectedYieldPercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false),
-                    DryingDaysMin = table.Column<int>(type: "integer", nullable: false),
-                    DryingDaysMax = table.Column<int>(type: "integer", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
+                    ProductId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    ExpectedYieldPercent = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    DryingDaysMin = table.Column<int>(type: "INTEGER", nullable: false),
+                    DryingDaysMax = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -71,11 +71,11 @@ namespace AgroProcessing.Migrations
                 name: "Workers",
                 columns: table => new
                 {
-                    WorkerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    SkillType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    DefaultRate = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
+                    WorkerId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    SkillType = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
+                    DefaultRate = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -86,11 +86,11 @@ namespace AgroProcessing.Migrations
                 name: "WorkTypes",
                 columns: table => new
                 {
-                    WorkTypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    RateType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Rate = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
+                    WorkTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    RateType = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Rate = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -101,11 +101,11 @@ namespace AgroProcessing.Migrations
                 name: "Sales",
                 columns: table => new
                 {
-                    SaleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    BuyerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SaleDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValue: "Open")
+                    SaleId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    BuyerId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    SaleDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Status = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false, defaultValue: "Open")
                 },
                 constraints: table =>
                 {
@@ -122,13 +122,13 @@ namespace AgroProcessing.Migrations
                 name: "Transportations",
                 columns: table => new
                 {
-                    TransportationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RelatedType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    RelatedId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FromLocationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ToLocationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Cost = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    PaymentStatus = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    TransportationId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RelatedType = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    RelatedId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    FromLocationId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ToLocationId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Cost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PaymentStatus = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,11 +151,11 @@ namespace AgroProcessing.Migrations
                 name: "ProcessingRuns",
                 columns: table => new
                 {
-                    ProcessingRunId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValue: "Started")
+                    ProcessingRunId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProductId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Status = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false, defaultValue: "Started")
                 },
                 constraints: table =>
                 {
@@ -172,15 +172,15 @@ namespace AgroProcessing.Migrations
                 name: "PurchaseBatches",
                 columns: table => new
                 {
-                    PurchaseBatchId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FarmerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PurchaseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    RawWeight = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    RatePerKg = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    PaymentSettlementType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, defaultValue: "Stored")
+                    PurchaseBatchId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    FarmerId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProductId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PurchaseDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    RawWeight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    RatePerKg = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PaymentSettlementType = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Status = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false, defaultValue: "Stored")
                 },
                 constraints: table =>
                 {
@@ -203,11 +203,11 @@ namespace AgroProcessing.Migrations
                 name: "SaleItems",
                 columns: table => new
                 {
-                    SaleItemId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SaleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Quantity = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    Rate = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
+                    SaleItemId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    SaleId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProductId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Rate = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -230,13 +230,13 @@ namespace AgroProcessing.Migrations
                 name: "SalesPayments",
                 columns: table => new
                 {
-                    SalesPaymentId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SaleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    AmountPaid = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PaymentMode = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    PaymentStatus = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    SalesPaymentId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    SaleId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    AmountPaid = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PaymentMode = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    PaymentStatus = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -253,10 +253,10 @@ namespace AgroProcessing.Migrations
                 name: "ProcessingCosts",
                 columns: table => new
                 {
-                    ProcessingCostId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProcessingRunId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CostType = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
+                    ProcessingCostId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProcessingRunId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CostType = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -273,12 +273,12 @@ namespace AgroProcessing.Migrations
                 name: "ProcessingOutputs",
                 columns: table => new
                 {
-                    ProcessingOutputId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProcessingRunId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TotalInputWeight = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    TotalOutputWeight = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    TotalLossWeight = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    YieldPercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false)
+                    ProcessingOutputId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProcessingRunId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    TotalInputWeight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalOutputWeight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalLossWeight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    YieldPercent = table.Column<decimal>(type: "decimal(5,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -295,11 +295,11 @@ namespace AgroProcessing.Migrations
                 name: "ProcessingStages",
                 columns: table => new
                 {
-                    ProcessingStageId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProcessingRunId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WorkTypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ProcessingStageId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProcessingRunId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    WorkTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -322,12 +322,12 @@ namespace AgroProcessing.Migrations
                 name: "BatchOutputAllocations",
                 columns: table => new
                 {
-                    BatchOutputAllocationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProcessingRunId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PurchaseBatchId = table.Column<Guid>(type: "uuid", nullable: false),
-                    InputWeight = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    OutputWeight = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    AllocatedProcessingCost = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
+                    BatchOutputAllocationId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProcessingRunId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PurchaseBatchId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    InputWeight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OutputWeight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    AllocatedProcessingCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -350,11 +350,11 @@ namespace AgroProcessing.Migrations
                 name: "FinishedInventories",
                 columns: table => new
                 {
-                    FinishedInventoryId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PurchaseBatchId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    LocationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Quantity = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
+                    FinishedInventoryId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PurchaseBatchId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProductId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    LocationId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -383,10 +383,10 @@ namespace AgroProcessing.Migrations
                 name: "ProcessingRunInputs",
                 columns: table => new
                 {
-                    ProcessingRunInputId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProcessingRunId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PurchaseBatchId = table.Column<Guid>(type: "uuid", nullable: false),
-                    InputWeight = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
+                    ProcessingRunInputId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProcessingRunId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PurchaseBatchId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    InputWeight = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -409,14 +409,14 @@ namespace AgroProcessing.Migrations
                 name: "PurchasePayments",
                 columns: table => new
                 {
-                    PurchasePaymentId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PurchaseBatchId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    AmountPaid = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PaymentMode = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    PaymentStatus = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Remarks = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true)
+                    PurchasePaymentId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PurchaseBatchId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    AmountPaid = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PaymentMode = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    PaymentStatus = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Remarks = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -433,11 +433,11 @@ namespace AgroProcessing.Migrations
                 name: "RawInventories",
                 columns: table => new
                 {
-                    RawInventoryId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PurchaseBatchId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    LocationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Quantity = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
+                    RawInventoryId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PurchaseBatchId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProductId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    LocationId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -466,10 +466,10 @@ namespace AgroProcessing.Migrations
                 name: "SaleBatchAllocations",
                 columns: table => new
                 {
-                    SaleBatchAllocationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SaleItemId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PurchaseBatchId = table.Column<Guid>(type: "uuid", nullable: false),
-                    QuantityAllocated = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
+                    SaleBatchAllocationId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    SaleItemId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PurchaseBatchId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    QuantityAllocated = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -492,11 +492,11 @@ namespace AgroProcessing.Migrations
                 name: "ProcessingStageWorkers",
                 columns: table => new
                 {
-                    ProcessingStageWorkerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProcessingStageId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WorkerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WorkedDays = table.Column<int>(type: "integer", nullable: false),
-                    CalculatedCost = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
+                    ProcessingStageWorkerId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProcessingStageId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    WorkerId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    WorkedDays = table.Column<int>(type: "INTEGER", nullable: false),
+                    CalculatedCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -519,12 +519,12 @@ namespace AgroProcessing.Migrations
                 name: "WorkerPayments",
                 columns: table => new
                 {
-                    WorkerPaymentId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WorkerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProcessingStageId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    PaidStatus = table.Column<bool>(type: "boolean", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    WorkerPaymentId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    WorkerId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProcessingStageId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PaidStatus = table.Column<bool>(type: "INTEGER", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -552,6 +552,11 @@ namespace AgroProcessing.Migrations
                 name: "IX_BatchOutputAllocations_PurchaseBatchId",
                 table: "BatchOutputAllocations",
                 column: "PurchaseBatchId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Buyers_Name",
+                table: "Buyers",
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FinishedInventories_LocationId",

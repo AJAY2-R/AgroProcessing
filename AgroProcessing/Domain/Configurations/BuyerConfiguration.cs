@@ -17,6 +17,8 @@ namespace AgroProcessing.Domain.Configurations
             builder.Property(b => b.CreditLimit)
                    .IsRequired()
                    .HasColumnType("decimal(18,2)");
+            
+            builder.HasIndex(b => b.Name);
         }
     }
 }
