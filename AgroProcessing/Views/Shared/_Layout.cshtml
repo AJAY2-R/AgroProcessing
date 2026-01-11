@@ -4,14 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AgroProcessing</title>
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
     <script type="importmap"></script>
     
     <!-- Tailwind CSS Output -->
     <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
-    
-    <!-- Optional: Keep Bootstrap for compatibility (you can remove this later) -->
-    <!-- <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> -->
-    
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AgroProcessing.styles.css" asp-append-version="true" />
     
     <!-- Google Fonts for better typography -->
@@ -95,10 +93,6 @@
                     <a asp-area="" asp-controller="Admin" asp-action="Index" 
                        class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
                         Admin
-                    </a>
-                    <a asp-area="" asp-controller="Home" asp-action="Privacy" 
-                       class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                        Privacy
                     </a>
                 </div>
             </div>
