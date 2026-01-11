@@ -30,9 +30,43 @@ namespace AgroProcessing.Controllers
             _masterDataService = masterDataService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                // Get quick stats for home page
+                var farmers = await _masterDataService.GetAllFarmersAsync();
+                var buyers = await _masterDataService.GetAllBuyersAsync();
+                var products = await _masterDataService.GetActiveProductsAsync();
+                var workers = await _masterDataService.GetActiveWorkersAsync();
+                var pendingPurchases = await _purchaseService.GetPendingPurchaseBatchesAsync();
+                var openSales = await _salesService.GetOpenSalesAsync();
+
+                ViewBag.TotalFarmers = farmers.Count();
+                ViewBag.TotalBuyers = buyers.Count();
+                ViewBag.TotalProducts = products.Count();
+                ViewBag.TotalWorkers = workers.Count();
+                ViewBag.PendingPurchases = pendingPurchases.Count();
+                ViewBag.OpenSales = openSales.Count();
+                ViewBag.PendingAmount = pendingPurchases.Sum(p => p.TotalAmount);
+                ViewBag.SalesAmount = openSales.Sum(s => s.TotalAmount);
+
+                return View();
+            }
+            catch (Exception)
+            {
+                // Return view with default values on error
+                ViewBag.TotalFarmers = 0;
+                ViewBag.TotalBuyers = 0;
+                ViewBag.TotalProducts = 0;
+                ViewBag.TotalWorkers = 0;
+                ViewBag.PendingPurchases = 0;
+                ViewBag.OpenSales = 0;
+                ViewBag.PendingAmount = 0;
+                ViewBag.SalesAmount = 0;
+                
+                return View();
+            }
         }
 
         public async Task<IActionResult> Dashboard()
