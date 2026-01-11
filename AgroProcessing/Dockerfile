@@ -32,8 +32,16 @@ RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 
+# Create directory for SQLite database with proper permissions
+RUN mkdir -p /app/data && \
+    chmod 777 /app/data
+
+# Set volume for database persistence
+VOLUME /app/data
+
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_ENVIRONMENT=Production
 
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "AgroProcessing.dll"]

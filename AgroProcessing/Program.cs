@@ -70,22 +70,50 @@ builder.Services.AddScoped<IReportService, ReportService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Apply database migrations automatically
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    var services = scope.ServiceProvider;
+    try
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "AgroProcessing API v1");
-        c.RoutePrefix = "swagger";
-        c.DocumentTitle = "AgroProcessing API Documentation";
-        c.DefaultModelsExpandDepth(2);
-        c.DefaultModelExpandDepth(2);
-        c.DisplayRequestDuration();
-        c.EnableFilter();
-        c.EnableTryItOutByDefault();
-    });
+        var context = services.GetRequiredService<AppDbContext>();
+        
+        // Ensure the database directory exists (for Docker volumes)
+        var connectionString = app.Configuration.GetConnectionString("DefaultConnection");
+        if (connectionString != null && connectionString.Contains("Data Source="))
+        {
+            var dbPath = connectionString.Replace("Data Source=", "").Split(';')[0];
+            var dbDirectory = Path.GetDirectoryName(dbPath);
+            if (!string.IsNullOrEmpty(dbDirectory) && !Directory.Exists(dbDirectory))
+            {
+                Directory.CreateDirectory(dbDirectory);
+            }
+        }
+        
+        // Apply pending migrations
+        context.Database.Migrate();
+        
+        app.Logger.LogInformation("Database migration completed successfully.");
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "An error occurred while migrating the database.");
+        throw;
+    }
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "AgroProcessing API v1");
+    c.RoutePrefix = "swagger";
+    c.DocumentTitle = "AgroProcessing API Documentation";
+    c.DefaultModelsExpandDepth(2);
+    c.DefaultModelExpandDepth(2);
+    c.DisplayRequestDuration();
+    c.EnableFilter();
+    c.EnableTryItOutByDefault();
+});
 
 if (!app.Environment.IsDevelopment())
 {
