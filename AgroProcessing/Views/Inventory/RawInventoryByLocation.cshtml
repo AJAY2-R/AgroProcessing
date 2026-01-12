@@ -1,0 +1,146 @@
+@model IEnumerable<AgroProcessing.Domain.Entries.RawInventory>
+@{
+    ViewData["Title"] = $"Raw Inventory - {ViewBag.Location.Name}";
+    var location = ViewBag.Location as AgroProcessing.Domain.Entries.Location;
+}
+
+<!-- Page Header with Back Button -->
+<div class="mb-6">
+    <div class="flex items-center space-x-4 mb-4">
+        <a asp-action="Index" class="text-gray-600 hover:text-gray-900">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+        </a>
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">@location.Name</h1>
+            <p class="text-gray-600">Raw material inventory at this location</p>
+        </div>
+    </div>
+</div>
+
+<!-- Location Info -->
+<div class="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center">
+            <div class="bg-blue-100 rounded-lg p-3 mr-4">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-gray-900">@location.Name</h2>
+                <p class="text-sm text-gray-600">Type: <span class="font-semibold">@location.LocationType</span></p>
+            </div>
+        </div>
+        <div class="text-right">
+            <p class="text-sm text-gray-500">Total Items</p>
+            <p class="text-2xl font-bold text-gray-900">@Model.Count()</p>
+        </div>
+    </div>
+</div>
+
+<!-- Inventory Table -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    @if (Model.Any())
+    {
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Batch ID
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Product
+                        </th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Quantity (kg)
+                        </th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                        </th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach (var item in Model)
+                    {
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">
+                                    @item.PurchaseBatchId.ToString().Substring(0, 8)...
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    ID: @item.RawInventoryId.ToString().Substring(0, 8)
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="bg-green-100 rounded-lg p-2 mr-2">
+                                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="text-sm text-gray-900">Product ID: @item.ProductId.ToString().Substring(0, 8)</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <span class="text-sm font-bold text-gray-900">@item.Quantity.ToString("N2")</span>
+                                <span class="text-xs text-gray-500">kg</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                @if (item.Quantity > 0)
+                                {
+                                    <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Available
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                        Empty
+                                    </span>
+                                }
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a asp-controller="Workflow" asp-action="PurchaseDetails" asp-route-id="@item.PurchaseBatchId" 
+                                   class="text-blue-600 hover:text-blue-900">
+                                    View Batch
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot class="bg-gray-50">
+                    <tr>
+                        <td colspan="2" class="px-6 py-4 text-sm font-bold text-gray-900">
+                            Total Quantity
+                        </td>
+                        <td class="px-6 py-4 text-right text-sm font-bold text-gray-900">
+                            @Model.Sum(i => i.Quantity).ToString("N2") kg
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No inventory</h3>
+            <p class="mt-1 text-sm text-gray-500">No raw materials are currently stored at this location.</p>
+            <div class="mt-6">
+                <a asp-controller="Workflow" asp-action="CreatePurchase" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                    Create Purchase
+                </a>
+            </div>
+        </div>
+    }
+</div>

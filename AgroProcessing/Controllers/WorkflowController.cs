@@ -18,6 +18,7 @@ namespace AgroProcessing.Controllers
         private readonly IMasterDataService _masterDataService;
         private readonly IRawInventoryService _rawInventoryService;
         private readonly IFinishedInventoryService _finishedInventoryService;
+        private readonly IPurchasePaymentService _purchasePaymentService;
 
         public WorkflowController(
             IPurchaseService purchaseService,
@@ -25,7 +26,8 @@ namespace AgroProcessing.Controllers
             ISalesService salesService,
             IMasterDataService masterDataService,
             IRawInventoryService rawInventoryService,
-            IFinishedInventoryService finishedInventoryService)
+            IFinishedInventoryService finishedInventoryService,
+            IPurchasePaymentService purchasePaymentService)
         {
             _purchaseService = purchaseService;
             _processingService = processingService;
@@ -33,6 +35,7 @@ namespace AgroProcessing.Controllers
             _masterDataService = masterDataService;
             _rawInventoryService = rawInventoryService;
             _finishedInventoryService = finishedInventoryService;
+            _purchasePaymentService = purchasePaymentService;
         }
 
         // Dashboard
@@ -100,6 +103,23 @@ namespace AgroProcessing.Controllers
             ViewBag.Inventory = inventory;
             
             return View(purchase);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RecordPurchasePayment(RecordPaymentDto dto)
+        {
+            try
+            {
+                await _purchasePaymentService.RecordPaymentAsync(dto);
+                TempData["SuccessMessage"] = "Payment recorded successfully!";
+                return RedirectToAction(nameof(PurchaseDetails), new { id = dto.PurchaseBatchId });
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(PurchaseDetails), new { id = dto.PurchaseBatchId });
+            }
         }
 
         #endregion

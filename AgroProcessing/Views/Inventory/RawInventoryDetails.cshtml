@@ -1,0 +1,217 @@
+@model IEnumerable<AgroProcessing.Domain.Entries.RawInventory>
+@{
+    ViewData["Title"] = "Raw Inventory Details";
+    var purchaseBatchId = ViewBag.PurchaseBatchId as Guid?;
+    var availableQuantity = ViewBag.AvailableQuantity as decimal?;
+}
+
+<!-- Page Header with Back Button -->
+<div class="mb-6">
+    <div class="flex items-center space-x-4 mb-4">
+        <a asp-action="Index" class="text-gray-600 hover:text-gray-900">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+        </a>
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Batch Inventory Details</h1>
+            <p class="text-gray-600">Detailed view of inventory for purchase batch</p>
+        </div>
+    </div>
+</div>
+
+<!-- Batch Summary Card -->
+<div class="mb-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-md p-6 text-white">
+    <div class="flex items-center justify-between">
+        <div>
+            <p class="text-blue-100 text-sm mb-1">Purchase Batch ID</p>
+            <p class="text-2xl font-bold">@purchaseBatchId?.ToString().Substring(0, 13)...</p>
+        </div>
+        <div class="text-right">
+            <p class="text-blue-100 text-sm mb-1">Total Available</p>
+            <p class="text-3xl font-bold">@availableQuantity?.ToString("N2") kg</p>
+        </div>
+    </div>
+</div>
+
+<!-- Distribution Stats -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+        <div class="flex items-center">
+            <div class="bg-purple-100 rounded-lg p-3 mr-3">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Locations</p>
+                <p class="text-2xl font-bold text-gray-900">@Model.Count()</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+        <div class="flex items-center">
+            <div class="bg-green-100 rounded-lg p-3 mr-3">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Avg per Location</p>
+                <p class="text-2xl font-bold text-gray-900">
+                    @(Model.Any() ? (Model.Sum(i => i.Quantity) / Model.Count()).ToString("N2") : "0.00") kg
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+        <div class="flex items-center">
+            <div class="bg-orange-100 rounded-lg p-3 mr-3">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Largest Stock</p>
+                <p class="text-2xl font-bold text-gray-900">
+                    @(Model.Any() ? Model.Max(i => i.Quantity).ToString("N2") : "0.00") kg
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Location Distribution Table -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+        <h2 class="text-lg font-bold text-gray-900">Location Distribution</h2>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Location
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Product
+                        </th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Quantity (kg)
+                        </th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            % of Total
+                        </th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach (var item in Model.OrderByDescending(i => i.Quantity))
+                    {
+                        var percentOfTotal = availableQuantity > 0 
+                            ? (item.Quantity / availableQuantity.Value * 100) 
+                            : 0;
+
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="bg-purple-100 rounded-lg p-2 mr-3">
+                                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">Location @item.LocationId.ToString().Substring(0, 8)</div>
+                                        <div class="text-xs text-gray-500">ID: @item.RawInventoryId.ToString().Substring(0, 8)</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="bg-green-100 rounded p-1.5 mr-2">
+                                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="text-sm text-gray-700">@item.ProductId.ToString().Substring(0, 8)</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <div class="flex flex-col items-end">
+                                    <span class="text-sm font-bold text-gray-900">@item.Quantity.ToString("N2")</span>
+                                    <div class="w-32 bg-gray-200 rounded-full h-2 mt-1.5">
+                                        <div class="bg-blue-600 h-2 rounded-full" style="width: @percentOfTotal.ToString("N1")%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    @percentOfTotal.ToString("N1")%
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a asp-action="RawInventoryByLocation" asp-route-locationId="@item.LocationId" 
+                                   class="text-purple-600 hover:text-purple-900 inline-flex items-center">
+                                    View Location
+                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot class="bg-gray-50 border-t-2 border-gray-300">
+                    <tr>
+                        <td colspan="2" class="px-6 py-4 text-sm font-bold text-gray-900">
+                            Total Quantity
+                        </td>
+                        <td class="px-6 py-4 text-right text-sm font-bold text-blue-600">
+                            @availableQuantity?.ToString("N2") kg
+                        </td>
+                        <td class="px-6 py-4 text-center text-sm font-bold text-gray-900">
+                            100.0%
+                        </td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No inventory found</h3>
+            <p class="mt-1 text-sm text-gray-500">This purchase batch has no associated inventory.</p>
+        </div>
+    }
+</div>
+
+<!-- Action Buttons -->
+<div class="mt-6 flex items-center justify-between">
+    <a asp-controller="Workflow" asp-action="PurchaseDetails" asp-route-id="@purchaseBatchId" 
+       class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        View Purchase Batch
+    </a>
+    
+    <a asp-controller="Workflow" asp-action="CreateProcessingRun" 
+       class="inline-flex items-center px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors">
+        Start Processing
+        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+        </svg>
+    </a>
+</div>

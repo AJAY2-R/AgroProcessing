@@ -1,4 +1,4 @@
-@model AgroProcessing.Domain.Entries.ProcessingRun
+﻿@model AgroProcessing.Domain.Entries.ProcessingRun
 @{
     ViewData["Title"] = "Processing Details";
     var totalCost = ViewBag.TotalCost as decimal?;
@@ -72,7 +72,7 @@
                 {
                     <div>
                         <p class="text-sm text-gray-600">Total Cost</p>
-                        <p class="text-lg font-bold text-purple-600">?@totalCost.Value.ToString("N2")</p>
+                        <p class="text-lg font-bold text-purple-600">₹@totalCost.Value.ToString("N2")</p>
                     </div>
                 }
             </div>
@@ -111,16 +111,27 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
             <div class="space-y-2">
-                <button class="w-full px-4 py-2 bg-purple-100 text-purple-700 font-medium rounded-lg hover:bg-purple-200">
+                <button onclick="showComingSoon('View Stages')" class="w-full px-4 py-2 bg-purple-100 text-purple-700 font-medium rounded-lg hover:bg-purple-200 transition-colors">
                     View Stages
                 </button>
-                <button class="w-full px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200">
+                <button onclick="showComingSoon('View Workers')" class="w-full px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors">
                     View Workers
                 </button>
-                <button class="w-full px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200">
+                <button onclick="showComingSoon('View Costs')" class="w-full px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors">
                     View Costs
                 </button>
+                <a asp-action="Processing" class="block w-full px-4 py-2 bg-blue-100 text-blue-700 font-medium rounded-lg hover:bg-blue-200 transition-colors text-center">
+                    Back to Processing List
+                </a>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function showComingSoon(feature) {
+            alert(feature + ' feature is coming soon!');
+        }
+    </script>
+}

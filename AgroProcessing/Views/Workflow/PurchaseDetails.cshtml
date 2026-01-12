@@ -1,4 +1,4 @@
-@model AgroProcessing.Domain.Entries.PurchaseBatch
+﻿@model AgroProcessing.Domain.Entries.PurchaseBatch
 @{
     ViewData["Title"] = "Purchase Details";
     var outstanding = ViewBag.Outstanding as decimal?;
@@ -86,12 +86,12 @@
                     </div>
                     <div class="text-right">
                         <p class="text-sm text-gray-600">Rate per Kg</p>
-                        <p class="text-xl font-semibold text-gray-900">?@Model.RatePerKg.ToString("N2")</p>
+                        <p class="text-xl font-semibold text-gray-900">₹@Model.RatePerKg.ToString("N2")</p>
                     </div>
                 </div>
                 <div class="flex justify-between items-center p-4 bg-green-50 rounded-lg border-2 border-green-200">
                     <p class="text-lg font-medium text-gray-900">Total Amount</p>
-                    <p class="text-3xl font-bold text-green-600">?@Model.TotalAmount.ToString("N2")</p>
+                    <p class="text-3xl font-bold text-green-600">₹@Model.TotalAmount.ToString("N2")</p>
                 </div>
             </div>
         </div>
@@ -123,27 +123,78 @@
             <div class="space-y-3">
                 <div class="flex justify-between items-center">
                     <span class="text-gray-600">Total Amount</span>
-                    <span class="font-semibold text-gray-900">?@Model.TotalAmount.ToString("N2")</span>
+                    <span class="font-semibold text-gray-900">₹@Model.TotalAmount.ToString("N2")</span>
                 </div>
                 @if (outstanding.HasValue)
                 {
                     <div class="flex justify-between items-center">
                         <span class="text-gray-600">Paid</span>
-                        <span class="font-semibold text-green-600">?@((Model.TotalAmount - outstanding.Value).ToString("N2"))</span>
+                        <span class="font-semibold text-green-600">₹@((Model.TotalAmount - outstanding.Value).ToString("N2"))</span>
                     </div>
                     <div class="pt-3 border-t border-gray-200">
                         <div class="flex justify-between items-center">
                             <span class="text-lg font-medium text-gray-900">Outstanding</span>
-                            <span class="text-lg font-bold text-red-600">?@outstanding.Value.ToString("N2")</span>
+                            <span class="text-lg font-bold text-red-600">₹@outstanding.Value.ToString("N2")</span>
                         </div>
                     </div>
                 }
             </div>
             @if (outstanding.HasValue && outstanding.Value > 0)
             {
-                <button class="mt-4 w-full px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors">
+                <button onclick="togglePaymentForm()" class="mt-4 w-full px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors">
                     Record Payment
                 </button>
+                
+                <!-- Payment Form (Initially Hidden) -->
+                <div id="paymentForm" class="mt-4 hidden">
+                    <form asp-action="RecordPurchasePayment" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="PurchaseBatchId" value="@Model.PurchaseBatchId" />
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Amount <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-2.5 text-gray-500">₹</span>
+                                    <input type="number" name="AmountPaid" step="0.01" min="0.01" max="@outstanding.Value" 
+                                           class="w-full pl-7 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500" 
+                                           placeholder="0.00" required />
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Payment Mode <span class="text-red-500">*</span></label>
+                                <select name="PaymentMode" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500" required>
+                                    <option value="">-- Select --</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="Cheque">Cheque</option>
+                                    <option value="UPI">UPI</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Payment Date</label>
+                                <input type="datetime-local" name="PaymentDate" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500" />
+                                <p class="text-xs text-gray-500 mt-1">Leave empty for pending payment</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Due Date <span class="text-red-500">*</span></label>
+                                <input type="datetime-local" name="DueDate" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500" required />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Remarks</label>
+                                <textarea name="Remarks" rows="2" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500" placeholder="Optional remarks"></textarea>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button type="submit" class="flex-1 px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700">
+                                    Submit
+                                </button>
+                                <button type="button" onclick="togglePaymentForm()" class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-400">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             }
         </div>
 
@@ -153,16 +204,19 @@
             <div class="space-y-2">
                 @if (Model.Status == "Stored")
                 {
-                    <button class="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                    <button onclick="showComingSoon('Start Processing')" class="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
                         Start Processing
                     </button>
                 }
-                <button class="w-full px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors">
+                <button onclick="showComingSoon('View History')" class="w-full px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors">
                     View History
                 </button>
-                <button class="w-full px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors">
+                <button onclick="showComingSoon('Generate Report')" class="w-full px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors">
                     Generate Report
                 </button>
+                <a asp-action="Purchases" class="block w-full px-4 py-2 bg-purple-100 text-purple-700 font-medium rounded-lg hover:bg-purple-200 transition-colors text-center">
+                    Back to Purchases
+                </a>
             </div>
         </div>
 
@@ -186,3 +240,33 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function togglePaymentForm() {
+            const form = document.getElementById('paymentForm');
+            form.classList.toggle('hidden');
+        }
+
+        function showComingSoon(feature) {
+            alert(feature + ' feature is coming soon!');
+        }
+        
+        // Set default dates
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            const dateStr = now.toISOString().slice(0, 16);
+            
+            const paymentDateInput = document.querySelector('input[name="PaymentDate"]');
+            const dueDateInput = document.querySelector('input[name="DueDate"]');
+            
+            if (paymentDateInput && !paymentDateInput.value) {
+                paymentDateInput.value = dateStr;
+            }
+            if (dueDateInput && !dueDateInput.value) {
+                dueDateInput.value = dateStr;
+            }
+        });
+    </script>
+}

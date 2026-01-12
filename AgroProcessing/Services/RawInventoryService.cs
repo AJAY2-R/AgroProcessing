@@ -111,5 +111,67 @@ namespace AgroProcessing.Services
             var available = await GetAvailableQuantityAsync(purchaseBatchId);
             return available >= requiredQuantity;
         }
+
+        public async Task<IEnumerable<RawInventory>> GetAllInventoryAsync()
+        {
+            return await _context.RawInventories
+                .AsNoTracking()
+                .Where(ri => ri.Quantity > 0)
+                .OrderByDescending(ri => ri.Quantity)
+                .ToListAsync();
+        }
+
+        public async Task<object> GetInventorySummaryAsync()
+        {
+            var allInventory = await _context.RawInventories
+                .AsNoTracking()
+                .Where(ri => ri.Quantity > 0)
+                .ToListAsync();
+
+            var totalQuantity = allInventory.Sum(ri => ri.Quantity);
+            var totalBatches = allInventory.Select(ri => ri.PurchaseBatchId).Distinct().Count();
+            var totalLocations = allInventory.Select(ri => ri.LocationId).Distinct().Count();
+            var totalProducts = allInventory.Select(ri => ri.ProductId).Distinct().Count();
+
+            var productSummary = allInventory
+                .GroupBy(ri => ri.ProductId)
+                .Select(g => new
+                {
+                    ProductId = g.Key,
+                    TotalQuantity = g.Sum(ri => ri.Quantity),
+                    LocationCount = g.Select(ri => ri.LocationId).Distinct().Count()
+                })
+                .ToList();
+
+            var locationSummary = allInventory
+                .GroupBy(ri => ri.LocationId)
+                .Select(g => new
+                {
+                    LocationId = g.Key,
+                    TotalQuantity = g.Sum(ri => ri.Quantity),
+                    ProductCount = g.Select(ri => ri.ProductId).Distinct().Count()
+                })
+                .ToList();
+
+            return new
+            {
+                TotalQuantity = totalQuantity,
+                TotalBatches = totalBatches,
+                TotalLocations = totalLocations,
+                TotalProducts = totalProducts,
+                AverageQuantityPerBatch = totalBatches > 0 ? totalQuantity / totalBatches : 0,
+                ProductSummary = productSummary,
+                LocationSummary = locationSummary
+            };
+        }
+
+        public async Task<IEnumerable<RawInventory>> GetInventoryByBatchAsync(Guid purchaseBatchId)
+        {
+            return await _context.RawInventories
+                .AsNoTracking()
+                .Where(ri => ri.PurchaseBatchId == purchaseBatchId)
+                .OrderByDescending(ri => ri.Quantity)
+                .ToListAsync();
+        }
     }
 }

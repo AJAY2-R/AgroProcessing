@@ -1,4 +1,4 @@
-@model AgroProcessing.DTOs.Purchase.CreatePurchaseBatchDto
+﻿@model AgroProcessing.DTOs.Purchase.CreatePurchaseBatchDto
 @{
     ViewData["Title"] = "Create Purchase";
     var farmers = ViewBag.Farmers as IEnumerable<AgroProcessing.Domain.Entries.Farmer>;
@@ -99,11 +99,11 @@
             <!-- Rate Per Kg -->
             <div>
                 <label asp-for="RatePerKg" class="block text-sm font-medium text-gray-700 mb-2">
-                    Rate per Kg (?) <span class="text-red-500">*</span>
+                    Rate per Kg (₹) <span class="text-red-500">*</span>
                 </label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span class="text-gray-500 text-sm">?</span>
+                        <span class="text-gray-500 text-sm">₹</span>
                     </div>
                     <input asp-for="RatePerKg" 
                            type="number" 
@@ -120,10 +120,10 @@
             <!-- Total Amount (Calculated) -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Total Amount (?)
+                    Total Amount (₹)
                 </label>
                 <div class="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-lg font-bold text-green-600">
-                    ?<span id="totalAmount">0.00</span>
+                    ₹<span id="totalAmount">0.00</span>
                 </div>
             </div>
 
@@ -158,7 +158,7 @@
                 </label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span class="text-gray-500 text-sm">?</span>
+                        <span class="text-gray-500 text-sm">₹</span>
                     </div>
                     <input asp-for="InitialPayment" 
                            type="number" 

@@ -1,4 +1,4 @@
-@model IEnumerable<AgroProcessing.Domain.Entries.Worker>
+﻿@model IEnumerable<AgroProcessing.Domain.Entries.Worker>
 @{
     ViewData["Title"] = "Workers";
 }
@@ -87,7 +87,7 @@
                                 }
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">?@worker.DefaultRate.ToString("N2")</div>
+                                <div class="text-sm font-medium text-gray-900">₹@worker.DefaultRate.ToString("N2")</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if (worker.IsActive)

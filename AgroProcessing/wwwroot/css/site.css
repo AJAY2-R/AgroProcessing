@@ -22,24 +22,6 @@
     body {
         @apply mb-16 bg-gray-50;
     }
-
-    .show {
-        visibility: visible;
-        display: unset;
-    }
-
-    .hide {
-        visibility: hidden;
-        display: none;
-    }
-
-    .flex-wrap {
-        flex-wrap: wrap;
-    }
-
-    .w-100 {
-        width: 100%;
-    }
 }
 
 @layer components {
@@ -79,4 +61,22 @@
     .input-custom {
         @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent;
     }
+}
+
+.show {
+    visibility: visible;
+    display: unset;
+}
+
+.hide {
+    visibility: hidden;
+    display: none;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.w-100 {
+    width: 100%;
 }

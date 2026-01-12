@@ -1,0 +1,157 @@
+@model IEnumerable<AgroProcessing.Domain.Entries.Location>
+@{
+    ViewData["Title"] = "Raw Inventory";
+    var locations = ViewBag.Locations as IEnumerable<AgroProcessing.Domain.Entries.Location> ?? Enumerable.Empty<AgroProcessing.Domain.Entries.Location>();
+    var products = ViewBag.Products as IEnumerable<AgroProcessing.Domain.Entries.Product> ?? Enumerable.Empty<AgroProcessing.Domain.Entries.Product>();
+}
+
+<!-- Page Header -->
+<div class="mb-8">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-1">Raw Inventory</h1>
+            <p class="text-gray-600">Manage and track raw material inventory across locations</p>
+        </div>
+        <a asp-action="AllRawInventory" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm">
+            View All Inventory
+        </a>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-200">
+        <div class="flex items-center">
+            <div class="bg-blue-100 rounded-lg p-3 mr-3">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Total Locations</p>
+                <p class="text-2xl font-bold text-gray-900">@locations.Count()</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-200">
+        <div class="flex items-center">
+            <div class="bg-green-100 rounded-lg p-3 mr-3">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Active Products</p>
+                <p class="text-2xl font-bold text-gray-900">@products.Count()</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-200">
+        <div class="flex items-center">
+            <div class="bg-purple-100 rounded-lg p-3 mr-3">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Raw Storage</p>
+                <p class="text-2xl font-bold text-gray-900">@locations.Count(l => l.LocationType == "Raw")</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-200">
+        <div class="flex items-center">
+            <div class="bg-orange-100 rounded-lg p-3 mr-3">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Processing</p>
+                <p class="text-2xl font-bold text-gray-900">@locations.Count(l => l.LocationType == "Processing")</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Inventory by Location -->
+<div class="mb-8">
+    <h2 class="text-xl font-bold text-gray-900 mb-4">Inventory by Location</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @if (locations.Any())
+        {
+            @foreach (var location in locations)
+            {
+                var (bgColor, textColor) = location.LocationType switch
+                {
+                    "Raw" => ("bg-blue-600", "text-blue-600"),
+                    "Processing" => ("bg-purple-600", "text-purple-600"),
+                    "Drying" => ("bg-yellow-600", "text-yellow-600"),
+                    "Finished" => ("bg-green-600", "text-green-600"),
+                    _ => ("bg-gray-600", "text-gray-600")
+                };
+
+                <a asp-action="RawInventoryByLocation" asp-route-locationId="@location.LocationId" 
+                   class="block bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="@bgColor w-10 h-10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-semibold @textColor">@location.LocationType</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-1">@location.Name</h3>
+                    <p class="text-sm text-gray-500">View inventory details</p>
+                </a>
+            }
+        }
+        else
+        {
+            <div class="col-span-full text-center py-8">
+                <p class="text-gray-500">No locations found. Create locations first.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Inventory by Product -->
+<div>
+    <h2 class="text-xl font-bold text-gray-900 mb-4">Inventory by Product</h2>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        @if (products.Any())
+        {
+            <div class="divide-y divide-gray-200">
+                @foreach (var product in products)
+                {
+                    <a asp-action="RawInventoryByProduct" asp-route-productId="@product.ProductId" 
+                       class="flex items-center justify-between p-5 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-center">
+                            <div class="bg-green-100 rounded-lg p-2.5 mr-3">
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-900">@product.Name</h3>
+                                <p class="text-sm text-gray-500">Expected Yield: @product.ExpectedYieldPercent%</p>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-8">
+                <p class="text-gray-500">No products found. Create products first.</p>
+            </div>
+        }
+    </div>
+</div>

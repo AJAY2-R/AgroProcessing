@@ -1,4 +1,4 @@
-@model IEnumerable<AgroProcessing.Domain.Entries.PurchaseBatch>
+﻿@model IEnumerable<AgroProcessing.Domain.Entries.PurchaseBatch>
 @{
     ViewData["Title"] = "Purchases";
 }
@@ -89,10 +89,10 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">@purchase.RawWeight.ToString("N2") kg</div>
-                                <div class="text-sm text-gray-500">?@purchase.RatePerKg.ToString("N2")/kg</div>
+                                <div class="text-sm text-gray-500">₹@purchase.RatePerKg.ToString("N2")/kg</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-bold text-gray-900">?@purchase.TotalAmount.ToString("N2")</div>
+                                <div class="text-sm font-bold text-gray-900">₹@purchase.TotalAmount.ToString("N2")</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @{

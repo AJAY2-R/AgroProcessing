@@ -1,4 +1,4 @@
-@model AgroProcessing.Domain.Entries.Sale
+﻿@model AgroProcessing.Domain.Entries.Sale
 @{
     ViewData["Title"] = "Sale Details";
 }
@@ -40,7 +40,7 @@
                 </div>
                 <div class="col-span-2">
                     <p class="text-sm text-gray-600">Total Amount</p>
-                    <p class="text-3xl font-bold text-orange-600">?@Model.TotalAmount.ToString("N2")</p>
+                    <p class="text-3xl font-bold text-orange-600">₹@Model.TotalAmount.ToString("N2")</p>
                 </div>
             </div>
         </div>

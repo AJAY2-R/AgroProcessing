@@ -1,4 +1,4 @@
-@model IEnumerable<AgroProcessing.Domain.Entries.Sale>
+﻿@model IEnumerable<AgroProcessing.Domain.Entries.Sale>
 @{
     ViewData["Title"] = "Sales";
 }
@@ -51,7 +51,7 @@
                             <div class="text-sm text-gray-900">Buyer: @sale.BuyerId.ToString().Substring(0, 8)</div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-lg font-bold text-gray-900">?@sale.TotalAmount.ToString("N2")</div>
+                            <div class="text-lg font-bold text-gray-900">₹@sale.TotalAmount.ToString("N2")</div>
                         </td>
                         <td class="px-6 py-4">
                             @{

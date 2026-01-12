@@ -19,6 +19,14 @@
     </div>
 </div>
 
+<!-- Messages -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+        <p class="text-red-800 font-medium">@TempData["ErrorMessage"]</p>
+    </div>
+}
+
 <!-- Form Card -->
 <div class="bg-white rounded-lg shadow-md p-8 max-w-4xl">
     <form asp-action="CreateProcessingRun" method="post" id="processingForm">
@@ -32,6 +40,7 @@
                 Select Product <span class="text-red-500">*</span>
             </label>
             <select asp-for="ProductId" 
+                    id="productSelect"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                     required
                     onchange="loadAvailableInventory()">
@@ -63,7 +72,10 @@
 
         <!-- Available Inventory Display -->
         <div id="inventorySection" class="mb-6 bg-purple-50 border-2 border-purple-200 rounded-lg p-4 hidden">
-            <h3 class="text-lg font-semibold text-purple-900 mb-3">Available Raw Material</h3>
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-semibold text-purple-900">Available Raw Material</h3>
+                <span id="inventoryCount" class="text-sm text-purple-700 font-medium"></span>
+            </div>
             <div id="inventoryList" class="space-y-2"></div>
         </div>
 
@@ -73,31 +85,48 @@
                 <label class="block text-sm font-medium text-gray-700">
                     Input Materials <span class="text-red-500">*</span>
                 </label>
-                <button type="button" onclick="addInputRow()" class="px-3 py-1 bg-purple-600 text-white text-sm font-medium rounded hover:bg-purple-700 transition-colors">
-                    + Add Input
+                <button type="button" 
+                        id="addInputBtn"
+                        onclick="addInputRow()" 
+                        class="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors shadow-sm flex items-center"
+                        disabled>
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Add Input
                 </button>
             </div>
             
-            <div id="inputsContainer" class="space-y-3">
-                <!-- Input rows will be added here dynamically -->
+            <div id="inputsContainer" class="space-y-3 min-h-[100px] bg-gray-50 rounded-lg p-4 border-2 border-dashed border-gray-300">
+                <p id="noInputsMessage" class="text-center text-gray-500 py-8">
+                    Select a product to add input materials
+                </p>
             </div>
             
-            <p class="text-sm text-gray-500 mt-2">Add at least one purchase batch as input</p>
+            <p class="text-sm text-gray-500 mt-2">
+                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Add at least one purchase batch as input material
+            </p>
         </div>
 
         <!-- Expected Output Display -->
         <div class="mb-8 bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-purple-300 rounded-lg p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-purple-700 font-medium">Total Input Weight</p>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="text-center">
+                    <p class="text-sm text-purple-700 font-medium mb-2">Total Input Weight</p>
                     <p class="text-3xl font-bold text-purple-900"><span id="totalInputWeight">0.00</span> kg</p>
                 </div>
-                <svg class="w-12 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                </svg>
-                <div>
-                    <p class="text-sm text-purple-700 font-medium">Expected Output</p>
-                    <p class="text-3xl font-bold text-purple-900"><span id="expectedOutput">0.00</span> kg</p>
+                <div class="flex items-center justify-center">
+                    <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </div>
+                <div class="text-center">
+                    <p class="text-sm text-purple-700 font-medium mb-2">Expected Output</p>
+                    <p class="text-3xl font-bold text-green-700"><span id="expectedOutput">0.00</span> kg</p>
+                    <p class="text-xs text-purple-600 mt-1">(<span id="yieldPercent">0</span>% yield)</p>
                 </div>
             </div>
         </div>
@@ -107,7 +136,10 @@
             <a asp-action="Processing" class="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
                 Cancel
             </a>
-            <button type="submit" class="px-6 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors shadow-md flex items-center">
+            <button type="submit" 
+                    id="submitBtn"
+                    class="px-6 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors shadow-md flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled>
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
@@ -135,47 +167,71 @@
         });
 
         async function loadAvailableInventory() {
-            const productSelect = document.querySelector('select[name="ProductId"]');
+            const productSelect = document.getElementById('productSelect');
             const productId = productSelect.value;
+            
+            // Reset state
+            availableInventory = [];
+            clearInputs();
             
             if (!productId) {
                 document.getElementById('inventorySection').classList.add('hidden');
+                document.getElementById('addInputBtn').disabled = true;
+                document.getElementById('noInputsMessage').textContent = 'Select a product to add input materials';
                 return;
             }
 
             // Get expected yield
             const selectedOption = productSelect.options[productSelect.selectedIndex];
             expectedYieldPercent = parseFloat(selectedOption.dataset.yield) || 0;
+            document.getElementById('yieldPercent').textContent = expectedYieldPercent.toFixed(1);
 
             try {
                 const response = await fetch(`/Workflow/GetAvailableInventory?productId=${productId}`);
                 const result = await response.json();
                 
-                if (result.success && result.data) {
+                if (result.success && result.data && result.data.length > 0) {
                     availableInventory = result.data;
                     displayAvailableInventory(result.data);
                     document.getElementById('inventorySection').classList.remove('hidden');
+                    document.getElementById('addInputBtn').disabled = false;
+                    document.getElementById('noInputsMessage').textContent = 'Click "Add Input" button to add raw materials';
+                    
+                    // Automatically add first input row
+                    addInputRow();
+                } else {
+                    document.getElementById('inventorySection').classList.remove('hidden');
+                    document.getElementById('inventoryList').innerHTML = '<p class="text-sm text-amber-700 bg-amber-50 p-3 rounded border border-amber-200">?? No available inventory for this product. Please purchase raw materials first.</p>';
+                    document.getElementById('inventoryCount').textContent = '0 batches available';
+                    document.getElementById('addInputBtn').disabled = true;
+                    document.getElementById('noInputsMessage').textContent = 'No inventory available for selected product';
                 }
             } catch (error) {
                 console.error('Error loading inventory:', error);
+                alert('Failed to load inventory. Please try again.');
             }
         }
 
         function displayAvailableInventory(inventory) {
             const container = document.getElementById('inventoryList');
+            const countSpan = document.getElementById('inventoryCount');
             container.innerHTML = '';
             
-            if (inventory.length === 0) {
-                container.innerHTML = '<p class="text-sm text-gray-600">No available inventory for this product</p>';
-                return;
-            }
+            countSpan.textContent = `${inventory.length} batch${inventory.length !== 1 ? 'es' : ''} available`;
 
-            inventory.forEach(item => {
+            inventory.forEach((item, index) => {
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-3 bg-white rounded border border-purple-200';
+                div.className = 'flex items-center justify-between p-3 bg-white rounded-lg border border-purple-200 hover:border-purple-400 transition-colors';
                 div.innerHTML = `
-                    <span class="text-sm text-gray-700">Batch: ${item.purchaseBatchId.substring(0, 13)}</span>
-                    <span class="text-sm font-semibold text-purple-700">${item.availableWeight.toFixed(2)} kg</span>
+                    <div class="flex items-center space-x-3">
+                        <span class="w-8 h-8 bg-purple-100 text-purple-700 rounded-full flex items-center justify-center font-semibold text-sm">
+                            ${index + 1}
+                        </span>
+                        <span class="text-sm text-gray-700 font-mono">Batch: ${item.purchaseBatchId.substring(0, 13)}...</span>
+                    </div>
+                    <span class="text-sm font-bold text-purple-700 bg-purple-100 px-3 py-1 rounded-full">
+                        ${item.availableWeight.toFixed(2)} kg
+                    </span>
                 `;
                 container.appendChild(div);
             });
@@ -183,41 +239,54 @@
 
         function addInputRow() {
             if (availableInventory.length === 0) {
-                alert('Please select a product first');
+                alert('No available inventory for selected product. Please purchase raw materials first.');
                 return;
+            }
+
+            // Hide the no inputs message
+            const noInputsMsg = document.getElementById('noInputsMessage');
+            if (noInputsMsg) {
+                noInputsMsg.style.display = 'none';
             }
 
             const container = document.getElementById('inputsContainer');
             const row = document.createElement('div');
-            row.className = 'grid grid-cols-12 gap-3 items-center';
+            row.className = 'grid grid-cols-12 gap-3 items-center bg-white p-3 rounded-lg border border-gray-300';
             row.id = `input-row-${inputCounter}`;
             
             row.innerHTML = `
-                <div class="col-span-7">
+                <div class="col-span-6">
+                    <label class="text-xs text-gray-600 mb-1 block">Purchase Batch</label>
                     <select name="Inputs[${inputCounter}].PurchaseBatchId" 
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 text-sm"
-                            required>
+                            required
+                            onchange="validateInput(${inputCounter})">
                         <option value="">-- Select Batch --</option>
                         ${availableInventory.map(inv => `
                             <option value="${inv.purchaseBatchId}" data-available="${inv.availableWeight}">
-                                Batch: ${inv.purchaseBatchId.substring(0, 13)} (${inv.availableWeight.toFixed(2)} kg)
+                                ${inv.purchaseBatchId.substring(0, 13)}... (${inv.availableWeight.toFixed(2)} kg available)
                             </option>
                         `).join('')}
                     </select>
                 </div>
-                <div class="col-span-4">
+                <div class="col-span-5">
+                    <label class="text-xs text-gray-600 mb-1 block">Weight (kg)</label>
                     <input type="number" 
                            name="Inputs[${inputCounter}].InputWeight" 
+                           id="input-weight-${inputCounter}"
                            step="0.01" 
                            min="0.01"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 text-sm"
-                           placeholder="Weight (kg)"
+                           placeholder="0.00"
                            required
                            onchange="calculateTotals()" />
+                    <span id="validation-${inputCounter}" class="text-xs text-red-500 hidden">Exceeds available</span>
                 </div>
-                <div class="col-span-1">
-                    <button type="button" onclick="removeInputRow(${inputCounter})" 
-                            class="text-red-600 hover:text-red-800">
+                <div class="col-span-1 flex justify-center">
+                    <button type="button" 
+                            onclick="removeInputRow(${inputCounter})" 
+                            class="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded transition-colors"
+                            title="Remove this input">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                         </svg>
@@ -227,6 +296,30 @@
             
             container.appendChild(row);
             inputCounter++;
+            updateSubmitButton();
+        }
+
+        function validateInput(rowId) {
+            const row = document.getElementById(`input-row-${rowId}`);
+            if (!row) return;
+
+            const select = row.querySelector('select');
+            const weightInput = row.querySelector('input[type="number"]');
+            const validation = document.getElementById(`validation-${rowId}`);
+            
+            const selectedOption = select.options[select.selectedIndex];
+            const available = parseFloat(selectedOption.dataset.available) || 0;
+            const weight = parseFloat(weightInput.value) || 0;
+            
+            if (weight > available) {
+                validation.classList.remove('hidden');
+                weightInput.classList.add('border-red-500');
+                weightInput.setCustomValidity('Weight exceeds available quantity');
+            } else {
+                validation.classList.add('hidden');
+                weightInput.classList.remove('border-red-500');
+                weightInput.setCustomValidity('');
+            }
         }
 
         function removeInputRow(id) {
@@ -234,7 +327,29 @@
             if (row) {
                 row.remove();
                 calculateTotals();
+                updateSubmitButton();
+                
+                // Show no inputs message if no rows left
+                const container = document.getElementById('inputsContainer');
+                if (container.querySelectorAll('[id^="input-row-"]').length === 0) {
+                    const noInputsMsg = document.getElementById('noInputsMessage');
+                    if (noInputsMsg) {
+                        noInputsMsg.style.display = 'block';
+                    }
+                }
             }
+        }
+
+        function clearInputs() {
+            const container = document.getElementById('inputsContainer');
+            container.querySelectorAll('[id^="input-row-"]').forEach(row => row.remove());
+            const noInputsMsg = document.getElementById('noInputsMessage');
+            if (noInputsMsg) {
+                noInputsMsg.style.display = 'block';
+            }
+            inputCounter = 0;
+            calculateTotals();
+            updateSubmitButton();
         }
 
         function calculateTotals() {
@@ -250,11 +365,15 @@
             
             document.getElementById('totalInputWeight').textContent = totalInput.toFixed(2);
             document.getElementById('expectedOutput').textContent = expectedOutput.toFixed(2);
+            
+            updateSubmitButton();
         }
 
-        // Add first input row on page load
-        window.addEventListener('load', function() {
-            // Optionally auto-add first row when product is selected
-        });
+        function updateSubmitButton() {
+            const submitBtn = document.getElementById('submitBtn');
+            const container = document.getElementById('inputsContainer');
+            const hasInputs = container.querySelectorAll('[id^="input-row-"]').length > 0;
+            submitBtn.disabled = !hasInputs;
+        }
     </script>
 }

@@ -10,5 +10,8 @@ namespace AgroProcessing.Services.Interfaces
         Task<IEnumerable<RawInventory>> GetInventoryByLocationAsync(Guid locationId);
         Task<IEnumerable<RawInventory>> GetInventoryByProductAsync(Guid productId);
         Task<bool> HasSufficientStockAsync(Guid purchaseBatchId, decimal requiredQuantity);
+        Task<IEnumerable<RawInventory>> GetAllInventoryAsync();
+        Task<object> GetInventorySummaryAsync();
+        Task<IEnumerable<RawInventory>> GetInventoryByBatchAsync(Guid purchaseBatchId);
     }
 }
