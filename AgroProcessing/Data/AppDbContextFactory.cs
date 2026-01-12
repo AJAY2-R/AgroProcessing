@@ -14,7 +14,7 @@ namespace AgroProcessing.Data
                 .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
 
             return new AppDbContext(optionsBuilder.Options);
         }

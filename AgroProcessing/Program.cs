@@ -53,7 +53,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register application services
 builder.Services.AddScoped<IMasterDataService, MasterDataService>();
@@ -77,18 +77,6 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
-        
-        // Ensure the database directory exists (for Docker volumes)
-        var connectionString = app.Configuration.GetConnectionString("DefaultConnection");
-        if (connectionString != null && connectionString.Contains("Data Source="))
-        {
-            var dbPath = connectionString.Replace("Data Source=", "").Split(';')[0];
-            var dbDirectory = Path.GetDirectoryName(dbPath);
-            if (!string.IsNullOrEmpty(dbDirectory) && !Directory.Exists(dbDirectory))
-            {
-                Directory.CreateDirectory(dbDirectory);
-            }
-        }
         
         // Apply pending migrations
         context.Database.Migrate();
